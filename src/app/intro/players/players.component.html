@@ -1,0 +1,14 @@
+<!-- <div class="form-group">
+    <label for="numberOfPlayersSelect">Select number of playes:</label>
+    <select class="form-control" id="numberOfPlayersSelect" (change)="selectNumberOfPlayers($event)">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+  </div> -->
+<div *ngFor="let player of players">
+  <app-player (player)="player"></app-player>
+</div>
+<button class="form-control" (click)="addPlayer()">Add new Player</button>

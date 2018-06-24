@@ -1,0 +1,13 @@
+
+<form onsubmit="return onSubmit()" class="game-input-form">
+<div class="input-group">
+    <div class="form-group col-lg-3 col-sm-8">
+        <label for="gameName" class="game-name-label">Enter game name</label>
+        <input id="gameName" ng-model="gameName" class="form-control game-name-input" placeholder="Game name">
+    </div>
+    <span class="input-group-btn">
+        <button (click)="addGame()" class="btn btn-primary mb-2 game-name-button">Enter CIV journey</button>
+    </span>
+</div>
+<app-players (players)="players"></app-players>
+</form>

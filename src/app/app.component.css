@@ -1,0 +1,10 @@
+.header-image-civ {
+    background: url(../assets/images/civ-header.jpg) 50% 50%;
+    height: 600px;
+}
+
+.header-civ {
+    text-align: center;
+    color: aliceblue;
+    padding-top: 200px;
+}
