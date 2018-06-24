@@ -19,7 +19,8 @@ export class GameEnterComponent implements OnInit {
   }
 
   public addGame(): void {
-    this.gameInitiated = true
+    this.gameInitiated = true;
+    console.log(this.gameName);
   }
 
 }
