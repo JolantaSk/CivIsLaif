@@ -14,12 +14,7 @@ export class PlayersComponent implements OnInit {
   ngOnInit() {
   }
 
-  // public selectNumberOfPlayers(event: Event) {
-    
-  // }
-
   public addPlayer(): void {
     this.players.push(new Player());
-    console.log(this.players);
   }
 }

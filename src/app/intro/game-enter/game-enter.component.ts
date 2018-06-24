@@ -9,19 +9,17 @@ import { Player } from '../player/player';
 export class GameEnterComponent implements OnInit {
 
   public gameName: string;
-  public players = new Array<Player>();
+  public players: Array<Player>;
+  public gameInitiated: boolean;
+
   constructor() { }
 
   ngOnInit() {
-    // this.players = new Array<Player>();
-  }
-
-  public onSubmit(): void {
-    console.log("submitted")
+    this.players = new Array<Player>();
   }
 
   public addGame(): void {
-
+    this.gameInitiated = true
   }
 
 }
