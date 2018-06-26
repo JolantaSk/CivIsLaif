@@ -9,6 +9,10 @@
 </div>
 <div *ngIf="gameInitiated">
   <h4 class="display-4">Welcome to game {{gameName}}</h4>
-  <app-players [players]="players"></app-players>
-  <button class="btn btn-success btn-lg btn-block form-control" [hidden]="players.length === 0">Add players</button>
+  <div *ngIf="!playersAdded">
+    <app-players (onAddPlayers)="addPlayers(event)"></app-players>
+  </div>
+  <div *ngIf="playersAdded">
+    <app-player-display [players]="players"></app-player-display>
+  </div>
 </div>

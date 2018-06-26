@@ -3,14 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GameEnterComponent } from './game-enter/game-enter.component';
 import { PlayersComponent } from './players/players.component';
-import { PlayerComponent } from './player/player.component';
+import { PlayerDisplayComponent } from './player-display/player-display.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule
   ],
-  declarations: [GameEnterComponent, PlayersComponent, PlayerComponent],
+  declarations: [
+    GameEnterComponent, 
+    PlayersComponent, 
+    PlayerDisplayComponent
+  ],
   exports: [
     GameEnterComponent
   ]
