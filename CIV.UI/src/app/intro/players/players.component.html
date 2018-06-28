@@ -2,7 +2,7 @@
   <div *ngFor="let player of players">
     <div class="form-group">
       <label for="name">Enter player name:</label>
-      <input class="form-control" id="name" ng-model="player.name">
+      <input class="form-control" id="name" [(ngModel)]="player.name">
     </div>
   </div>
   <button class="btn btn-primary btn-lg btn-block" (click)="addPlayer()">Add new Player</button>
