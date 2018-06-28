@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Player } from '../models/player';
 import { HttpClient } from 'selenium-webdriver/http';
 import { Observable } from 'rxjs/internal/Observable';
+import { Player } from '../../core/models/player';
 
 @Injectable({
   providedIn: 'root'

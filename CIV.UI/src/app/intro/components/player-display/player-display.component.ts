@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Player } from '../../models/player';
+import { Player } from '../../../core/models/player';
 
 @Component({
   selector: 'app-player-display',
