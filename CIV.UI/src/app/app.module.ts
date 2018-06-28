@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
-import { IntroModule } from './intro/intro.module';
+import { GameModule } from './game/game.module';
 import { CoreModule } from './core/core.module';
+import { GameStateService } from './core/services/game-state.service';
 
 @NgModule({
   declarations: [
@@ -11,10 +11,10 @@ import { CoreModule } from './core/core.module';
   ],
   imports: [
     BrowserModule,
-    IntroModule,
+    GameModule,
     CoreModule
   ],
-  providers: [],
+  providers: [GameStateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

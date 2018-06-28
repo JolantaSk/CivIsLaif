@@ -22,4 +22,4 @@ import { SharedModule } from '../shared/shared.module';
     GameEnterComponent
   ]
 })
-export class IntroModule { }
+export class GameModule { }
