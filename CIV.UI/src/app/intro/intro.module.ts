@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { GameEnterComponent } from './game-enter/game-enter.component';
-import { PlayersComponent } from './players/players.component';
-import { PlayerDisplayComponent } from './player-display/player-display.component';
+import { GameEnterComponent } from './components/game-enter/game-enter.component';
+import { PlayersComponent } from './components/players/players.component';
+import { PlayerDisplayComponent } from './components/player-display/player-display.component';
+import { GameModeComponent } from './components/game-mode/game-mode.component';
 
 @NgModule({
   imports: [
@@ -13,7 +14,7 @@ import { PlayerDisplayComponent } from './player-display/player-display.componen
   declarations: [
     GameEnterComponent, 
     PlayersComponent, 
-    PlayerDisplayComponent
+    PlayerDisplayComponent, GameModeComponent
   ],
   exports: [
     GameEnterComponent
