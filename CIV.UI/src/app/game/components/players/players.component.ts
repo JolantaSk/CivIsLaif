@@ -9,7 +9,7 @@ import { Player } from '../../../core/models/player';
 export class PlayersComponent implements OnInit {
 
   public players: Array<Player>;
-  @Output() onAddPlayers = new EventEmitter<Array<Player>>();
+  @Output() addPlayers = new EventEmitter<Array<Player>>();
 
   constructor() { }
 
@@ -22,7 +22,7 @@ export class PlayersComponent implements OnInit {
     this.players.push(new Player());
   }
 
-  public addPlayers(): void {
-    this.onAddPlayers.emit(this.players);
+  public onAddPlayers(): void {
+    this.addPlayers.emit(this.players);
   }
 }

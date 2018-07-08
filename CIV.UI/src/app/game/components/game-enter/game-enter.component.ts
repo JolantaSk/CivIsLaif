@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayersService } from '../../services/players.service';
-import { Player } from '../../../core/models/player';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-game-enter',
@@ -10,26 +9,18 @@ import { Player } from '../../../core/models/player';
 export class GameEnterComponent implements OnInit {
 
   public gameName: string;
-  public players: Array<Player>;
   public gameInitiated: boolean;
   public playersAdded: boolean;
 
   constructor(
-    private playersService: PlayersService
+    private gameService: GameService
   ) { }
 
   ngOnInit() {
   }
 
   public addGame(): void {
-    this.gameInitiated = true;
+    this.gameService.start(this.gameName)
+      .subscribe(() => this.gameInitiated = true);
   }
-
-  public addPlayers(players: any): void {
-    this.players = players;
-    this.playersAdded = true;
-    this.playersService.AddPlayers(this.players).subscribe();
-    console.log(this.players);
-  }
-
 }

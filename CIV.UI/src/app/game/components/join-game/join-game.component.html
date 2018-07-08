@@ -1,0 +1,8 @@
+<div class="col-lg-4 com-sm-8">
+  <app-player-display [players]="players"></app-player-display>
+  <div class="form-group">
+    <label for="name">Enter your name:</label>
+    <input class="form-control" id="name" [(ngModel)]="username">
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" (click)="join()">Join game</button>
+</div>
