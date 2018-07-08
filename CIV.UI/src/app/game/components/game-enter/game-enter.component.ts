@@ -20,7 +20,7 @@ export class GameEnterComponent implements OnInit {
   }
 
   public addGame(): void {
-    this.gameService.start(this.gameName)
+    this.gameService.create(this.gameName)
       .subscribe(() => this.gameInitiated = true);
   }
 }

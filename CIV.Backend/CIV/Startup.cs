@@ -35,17 +35,13 @@ namespace CIV
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o => {
-                    o.Audience = Configuration["TokenAuthentication:Audience"];
-                    o.Authority = Configuration["TokenAuthentication:Authority"];
-                    o.RequireHttpsMetadata = false;
                     o.IncludeErrorDetails = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         IssuerSigningKey = sharedKey,
-                        ClockSkew = TimeSpan.FromMinutes(5),
-                        RequireExpirationTime = true,
-                        ValidateLifetime = true,
-                        RequireSignedTokens = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidAudience = Configuration["TokenAuthentication:Audience"],
+                        ValidIssuer = Configuration["TokenAuthentication:Authority"]
                     };
                 });
             services.AddMvc();
@@ -53,9 +49,10 @@ namespace CIV
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
-                    builder.AllowAnyMethod().AllowAnyHeader()
-                           .WithOrigins("http://localhost:4200")
-                           .AllowCredentials();
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins("http://localhost:4200")
+                        .AllowCredentials();
                 }));
         }
 

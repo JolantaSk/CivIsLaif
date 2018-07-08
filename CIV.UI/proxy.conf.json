@@ -1,0 +1,14 @@
+{   
+    "/api/*": {
+        "target": "https://localhost:5001",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/*Hub": {
+        "target": "https://localhost:5001",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    }
+ }

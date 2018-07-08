@@ -22,9 +22,10 @@ namespace CIV
 
         // POST api/auth/login
         [HttpPost("login")]
-        public string Post([FromBody]string username)
+        public object Post([FromBody]LoginViewModel model)
         {
-            return GenerateJwtToken(username);
+            var token = GenerateJwtToken(model.Username);
+            return new { token };
         }
 
         private string GenerateJwtToken(string username)
@@ -41,8 +42,8 @@ namespace CIV
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["TokenAuthentication:TokenExpirationInDays"]));
 
             var token = new JwtSecurityToken(
-                _configuration["TokenAuthentication:Issuer"],
-                _configuration["TokenAuthentication:Issuer"],
+                _configuration["TokenAuthentication:Authority"],
+                _configuration["TokenAuthentication:Audience"],
                 claims,
                 expires: expires,
                 signingCredentials: creds
@@ -51,5 +52,10 @@ namespace CIV
             return new JwtSecurityTokenHandler()
                 .WriteToken(token);
         }
+    }
+
+    public class LoginViewModel
+    {
+        public string Username { get; set; }
     }
 }

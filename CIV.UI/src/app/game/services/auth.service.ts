@@ -1,28 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'https://localhost:5001';
-  private _token: string;
+  redirectUrl: string;
 
   constructor(
     private httpClient: HttpClient
-  ) { }
+  ) {
+  }
 
   public get token(): string {
-    return this._token;
+        return localStorage.getItem('token');
   }
 
   public get isAuthenticated(): boolean {
-    return !!this._token;
+        return !!this.token;
   }
 
   public login(username: string) {
-    this.httpClient.post<string>(this.baseUrl + '/api/auth/login', {username})
-            .toPromise()
-            .then(r => this._token = r);
+    const o = this.httpClient.post<any>('/api/auth/login', {username});
+    return map<any, string>(r => {
+        localStorage.setItem('token', r.token);
+        return r.token;
+    })(o);
   }
 }

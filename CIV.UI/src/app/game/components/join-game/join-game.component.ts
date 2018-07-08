@@ -27,7 +27,6 @@ export class JoinGameComponent implements OnInit {
   }
 
   join() {
-    this.authService.login(this.username);
     this.gameHubService.join(this.gameName);
   }
 }

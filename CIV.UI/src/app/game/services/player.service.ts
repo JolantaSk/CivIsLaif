@@ -8,18 +8,12 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class PlayerService {
-  private baseUrl = 'https://localhost:5001';
-
   constructor(
     private httpClient: HttpClient
   ) { }
 
-  public AddPlayers(player: Array<Player>): Observable<any> {
-    return new Observable();
-  }
-
   public getPlayers(gameName: string): Observable<Player[]> {
-    const resource = this.httpClient.get<string[]>(this.baseUrl + '/api/player', {
+    const resource = this.httpClient.get<string[]>('/api/player', {
         params: {name: gameName}
     });
     return map<string[], Player[]>(r => r.map(n => {

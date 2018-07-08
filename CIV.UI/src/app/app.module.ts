@@ -4,6 +4,8 @@ import { AppComponent } from './app.component';
 import { GameModule } from './game/game.module';
 import { CoreModule } from './core/core.module';
 import { GameStateService } from './core/services/game-state.service';
+import { AppRountingModule } from './app.rounting.module';
+import { httpInterceptorProviders } from './http-interceptors/http-interceptor-provider';
 
 @NgModule({
   declarations: [
@@ -12,9 +14,10 @@ import { GameStateService } from './core/services/game-state.service';
   imports: [
     BrowserModule,
     GameModule,
-    CoreModule
+    CoreModule,
+    AppRountingModule
   ],
-  providers: [GameStateService],
+  providers: [GameStateService, httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
