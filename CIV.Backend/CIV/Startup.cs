@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 
 namespace CIV
@@ -51,7 +48,7 @@ namespace CIV
                 {
                     builder.AllowAnyMethod()
                         .AllowAnyHeader()
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins(Configuration["AllowedOrigins"])
                         .AllowCredentials();
                 }));
         }
