@@ -45,10 +45,7 @@ namespace CIV
                         ValidateIssuer = false,
                         ValidateActor = false,
                         ValidateLifetime = true,
-                        IssuerSigningKey = sharedKey,
-                        //ValidateIssuerSigningKey = true,
-                        //ValidAudience = Configuration["TokenAuthentication:Audience"],
-                        //ValidIssuer = Configuration["TokenAuthentication:Authority"]
+                        IssuerSigningKey = sharedKey
                     };
                     o.Events = new JwtBearerEvents
                     {

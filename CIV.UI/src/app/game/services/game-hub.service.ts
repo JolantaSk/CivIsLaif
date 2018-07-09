@@ -9,7 +9,6 @@ import { catchError } from 'rxjs/operators';
 })
 export class GameHubService {
     private connection: HubConnection;
-    private connected: Promise<void>;
     gameStarted = new Subject<void>();
 
   constructor(
@@ -32,5 +31,9 @@ export class GameHubService {
 
   public start(gameName: string) {
     return this.connection.invoke('Start', gameName);
+  }
+
+  public getGameStream() {
+    return this.connection.stream('GameEvent');
   }
 }
