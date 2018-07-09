@@ -1,3 +1,8 @@
+<div *ngIf="currentPlayersTurn">
+  <h1>Your turn</h1>
+  <button class="btn btn-primary btn-lg btn-block">Finish turn</button>
+</div>
+
 <dl class="row" *ngIf="state">
   <dt class="col-sm-3">Turn</dt>
   <dd class="col-sm-9">{{state.turn}}</dd>

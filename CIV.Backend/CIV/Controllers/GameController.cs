@@ -32,7 +32,7 @@ namespace CIV.Controllers
             {
                 turn = 1,
                 phase = "Phase 1",
-                currentPlayer = "Player 1",
+                currentPlayer = User.Identity.Name,
                 timeElapsedInMilliseconds = 12
             };
         }

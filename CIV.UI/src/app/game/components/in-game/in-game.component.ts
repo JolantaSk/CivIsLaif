@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { GameHubService } from '../../services/game-hub.service';
-import { Observable } from '../../../../../node_modules/rxjs';
+import { race } from 'rxjs/operators';
 import { GameService } from '../../services/game.service';
-import { ActivatedRoute } from '../../../../../node_modules/@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-in-game',
@@ -11,26 +12,23 @@ import { ActivatedRoute } from '../../../../../node_modules/@angular/router';
 })
 export class InGameComponent implements OnInit {
   state: GameState;
-  receivedStateChange = false;
+  currentPlayersTurn: boolean;
 
   constructor(
     private gameHubService: GameHubService,
     private gameService: GameService,
+    private authService: AuthService,
     private route: ActivatedRoute
   ) {
   }
 
   ngOnInit() {
-    this.gameHubService.gameEvents.subscribe((state: GameState) => {
-        this.state = state;
-        this.receivedStateChange = true;
-    });
     this.route.params.subscribe(({name}) => {
       this.gameService.getState(name)
+        .pipe(race(this.gameHubService.gameEvents))
         .subscribe(state => {
-          if (!this.receivedStateChange) {
             this.state = state;
-          }
+            this.currentPlayersTurn = state && state.currentPlayer === this.authService.username;
         });
     });
 
