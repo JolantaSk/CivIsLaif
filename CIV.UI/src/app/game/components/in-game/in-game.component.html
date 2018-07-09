@@ -1,3 +1,10 @@
-<p>
-  in-game works!
-</p>
+<dl class="row" *ngIf="state">
+  <dt class="col-sm-3">Turn</dt>
+  <dd class="col-sm-9">{{state.turn}}</dd>
+  <dt class="col-sm-3">Phase</dt>
+  <dd class="col-sm-9">{{state.phase}}</dd>
+  <dt class="col-sm-3">Current player</dt>
+  <dd class="col-sm-9">{{state.currentPlayer}}</dd>
+  <dt class="col-sm-3">Time elapsed</dt>
+  <dd class="col-sm-9">{{state.timeElapsedInMilliseconds | date: 'mm:ss'}}</dd>
+</dl>

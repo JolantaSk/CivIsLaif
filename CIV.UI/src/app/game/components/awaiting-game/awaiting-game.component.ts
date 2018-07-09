@@ -27,7 +27,7 @@ export class AwaitingGameComponent implements OnInit {
 
   ngOnInit() {
     this.gameHubService.gameStarted.subscribe(() => {
-      this.router.navigate(['/game', name]);
+      this.router.navigate(['/game', this.gameName]);
     });
 
     this.route.params.subscribe(({name}) => {

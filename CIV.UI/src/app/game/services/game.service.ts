@@ -20,4 +20,8 @@ export class GameService {
   public getCreator(name: string) {
     return this.httpClient.get<any>(`/api/game/${name}/creator`);
   }
+
+  public getState(name: string) {
+    return this.httpClient.get<any>(`/api/game/${name}/state`);
+  }
 }

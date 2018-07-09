@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { AuthService } from '../../core/services/auth.service';
-import { Observable, empty, Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +9,8 @@ import { catchError } from 'rxjs/operators';
 export class GameHubService {
     private connection: HubConnection;
     gameStarted = new Subject<void>();
+    gameEvents = new Subject<any>();
+    connected = new Subject<void>();
 
   constructor(
     authService: AuthService
@@ -21,8 +22,10 @@ export class GameHubService {
       .build();
     this.connection
       .start()
+      .then(() => this.connected.next())
       .catch(err => console.error(err.toString()));
     this.connection.on('GameStarted', () => this.gameStarted.next());
+    this.connection.on('GameEvent', (e) => this.gameEvents.next(e));
   }
 
   public join(gameName: string) {
@@ -31,9 +34,5 @@ export class GameHubService {
 
   public start(gameName: string) {
     return this.connection.invoke('Start', gameName);
-  }
-
-  public getGameStream() {
-    return this.connection.stream('GameEvent');
   }
 }

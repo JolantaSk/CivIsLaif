@@ -24,6 +24,18 @@ namespace CIV.Controllers
         {
             return new { username = GameStore.GetGameCreator(name) };
         }
+
+        [HttpGet("{name}/state")]
+        public object GetState(string name)
+        {
+            return new
+            {
+                turn = 1,
+                phase = "Phase 1",
+                currentPlayer = "Player 1",
+                timeElapsedInMilliseconds = 12
+            };
+        }
     }
 
     public class CreateGameModel
