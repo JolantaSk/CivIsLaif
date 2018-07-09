@@ -8,13 +8,11 @@ import { GameModeComponent } from './components/game-mode/game-mode.component';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { JoinGameComponent } from './components/join-game/join-game.component';
-import { HomeComponent } from './components/home/home.component';
 import { CreateGameComponent } from './components/create-game/create-game.component';
-import { SignInComponent } from './components/sign-in/sign-in.component';
 import { InGameComponent } from './components/in-game/in-game.component';
 import { AwaitingGameComponent } from './components/awaiting-game/awaiting-game.component';
-import { AuthGuard } from './services/auth-guard.service';
-import { RouterModule } from '../../../node_modules/@angular/router';
+import { AuthGuard } from '../core/services/auth-guard.service';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -30,9 +28,7 @@ import { RouterModule } from '../../../node_modules/@angular/router';
     JoinGameComponent,
     PlayerDisplayComponent,
     GameModeComponent,
-    HomeComponent,
     CreateGameComponent,
-    SignInComponent,
     InGameComponent,
     AwaitingGameComponent
   ],

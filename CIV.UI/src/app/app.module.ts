@@ -6,6 +6,7 @@ import { CoreModule } from './core/core.module';
 import { GameStateService } from './core/services/game-state.service';
 import { AppRountingModule } from './app.rounting.module';
 import { httpInterceptorProviders } from './http-interceptors/http-interceptor-provider';
+import { LandingModule } from './landing/landing.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { httpInterceptorProviders } from './http-interceptors/http-interceptor-p
   imports: [
     BrowserModule,
     GameModule,
+    LandingModule,
     CoreModule,
     AppRountingModule
   ],

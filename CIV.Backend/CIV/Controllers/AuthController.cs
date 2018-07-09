@@ -34,7 +34,8 @@ namespace CIV
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, username)
+                new Claim(ClaimTypes.NameIdentifier, username),
+                new Claim(ClaimTypes.Name, username)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenAuthentication:Key"]));

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,11 +8,16 @@ import { HttpClient } from '@angular/common/http';
 export class GameService {
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private authService: AuthService
   ) {
   }
 
-  public create(gameName: string) {
-    return this.httpClient.post('/api/game', {name: gameName});
+  public create(name: string) {
+    return this.httpClient.post('/api/game', { name: name, creator: this.authService.username });
+  }
+
+  public getCreator(name: string) {
+    return this.httpClient.get<any>(`/api/game/${name}/creator`);
   }
 }

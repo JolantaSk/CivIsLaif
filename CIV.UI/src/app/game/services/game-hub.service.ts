@@ -1,27 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { AuthService } from './auth.service';
-import { from } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+import { Observable, empty, Subject } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GameHubService {
     private connection: HubConnection;
-    private baseUrl = 'https://localhost:5001';
+    private connected: Promise<void>;
+    gameStarted = new Subject<void>();
 
   constructor(
     authService: AuthService
   ) {
     this.connection = new HubConnectionBuilder()
-      .withUrl(this.baseUrl + '/gameHub', {
+      .withUrl('/gameHub', {
         accessTokenFactory: () => authService.token
       })
       .build();
     this.connection
       .start()
       .catch(err => console.error(err.toString()));
+    this.connection.on('GameStarted', () => this.gameStarted.next());
   }
 
   public join(gameName: string) {
-    return from(this.connection.invoke('Join', gameName));
+    return this.connection.invoke('Join', gameName);
+  }
+
+  public start(gameName: string) {
+    return this.connection.invoke('Start', gameName);
   }
 }

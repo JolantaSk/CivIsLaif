@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 })
 export class AuthService {
   redirectUrl: string;
+  username: string;
 
   constructor(
     private httpClient: HttpClient
@@ -25,6 +26,7 @@ export class AuthService {
     const o = this.httpClient.post<any>('/api/auth/login', {username});
     return map<any, string>(r => {
         localStorage.setItem('token', r.token);
+        this.username = username;
         return r.token;
     })(o);
   }

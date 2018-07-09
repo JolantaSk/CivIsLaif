@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Player } from '../../../core/models/player';
 import { PlayerService } from '../../services/player.service';
-import { AuthService } from '../../services/auth.service';
 import { GameHubService } from '../../services/game-hub.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-join-game',

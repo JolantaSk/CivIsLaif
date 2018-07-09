@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { Router } from '@angular/router';
+import { GameHubService } from '../../services/game-hub.service';
+import { flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-game',
@@ -12,6 +14,7 @@ export class CreateGameComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
+    private gameHubService: GameHubService,
     private router: Router
   ) { }
 
@@ -20,6 +23,7 @@ export class CreateGameComponent implements OnInit {
 
   create() {
     this.gameService.create(this.gameName)
-      .subscribe(() => this.router.navigate([`/game/${this.gameName}/awaiting`]));
+    .subscribe(() => this.gameHubService.join(this.gameName)
+      .then(() => this.router.navigate([`/game/${this.gameName}/awaiting`])));
   }
 }

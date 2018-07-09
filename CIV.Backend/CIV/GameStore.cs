@@ -12,15 +12,24 @@ namespace CIV
         private const int CodeLength = 4;
         private static Subject<string> _gameAdded = new Subject<string>();
 
-        public static Guid AddGame(string name)
+        public static Guid AddGame(string name, string creator)
         {
-            var game = new Game(name);
+            var game = new Game(name, creator);
             lock (_lock)
             {
                _games.Add(game);
             }
             _gameAdded.OnNext(name);
             return game.Id;
+        }
+
+        public static string GetGameCreator(string name)
+        {
+            lock (_lock)
+            {
+                var game = _games.SingleOrDefault(g => g.Name == name);
+                return game.Creator.Username;
+            }
         }
 
         public static IEnumerable<string> GetPlayerNames(string name)
@@ -45,6 +54,15 @@ namespace CIV
                 var game = _games.Single(g => g.Name == gameName);
                 var player = game.AddPlayer(username);
                 return player.Id;
+            }
+        }
+
+        public static bool HasPlayer(string gameName, string username)
+        {
+            lock (_lock)
+            {
+                var game = _games.Single(g => g.Name == gameName);
+                return game.HasPlayer(username);
             }
         }
 

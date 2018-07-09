@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using CIV.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CIV
 {
@@ -35,14 +40,43 @@ namespace CIV
                     o.IncludeErrorDetails = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
+                        LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateActor = false,
+                        ValidateLifetime = true,
                         IssuerSigningKey = sharedKey,
-                        ValidateIssuerSigningKey = true,
-                        ValidAudience = Configuration["TokenAuthentication:Audience"],
-                        ValidIssuer = Configuration["TokenAuthentication:Authority"]
+                        //ValidateIssuerSigningKey = true,
+                        //ValidAudience = Configuration["TokenAuthentication:Audience"],
+                        //ValidIssuer = Configuration["TokenAuthentication:Authority"]
+                    };
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+
+                            if (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream")
+                            {
+                                var accessToken = context.Request.Query["access_token"];
+                                if (!string.IsNullOrEmpty(accessToken))
+                                {
+                                    context.Token = accessToken;
+                                }
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
-            services.AddMvc();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireClaim(ClaimTypes.NameIdentifier);
+                });
+            });
             services.AddSignalR();
+            services.AddMvc();
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
@@ -51,6 +85,8 @@ namespace CIV
                         .WithOrigins(Configuration["AllowedOrigins"])
                         .AllowCredentials();
                 }));
+
+            services.AddSingleton<IAuthorizationHandler, GameCreatorHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,11 +101,11 @@ namespace CIV
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
-            app.UseMvc();
             app.UseSignalR(routes =>
             {
                 routes.MapHub<GameHub>("/gameHub");
             });
+            app.UseMvc();
         }
     }
 }
