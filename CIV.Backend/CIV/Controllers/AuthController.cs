@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CIV.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CIV
 {
@@ -13,18 +15,26 @@ namespace CIV
     public class AuthController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
         public AuthController(
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IUserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
         }
 
         // POST api/auth/login
         [HttpPost("login")]
-        public object Post([FromBody]LoginViewModel model)
+        public async Task<object> Post([FromBody]LoginViewModel model)
         {
-            var token = GenerateJwtToken(model.Username);
+            string username = model.Username;
+            if(!await _userService.ExistsAsync(username))
+            {
+                await _userService.CreateAsync(username);
+            }
+            var token = GenerateJwtToken(username);
             return new { token };
         }
 

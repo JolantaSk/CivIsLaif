@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Player } from '../../../core/models/player';
-import { PlayerService } from '../../services/player.service';
 import { GameHubService } from '../../services/game-hub.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-join-game',
@@ -16,13 +15,12 @@ export class JoinGameComponent implements OnInit {
   @Input() gameName: string;
 
   constructor(
-    private playerService: PlayerService,
-    private gameHubService: GameHubService,
-    private authService: AuthService,
+    private gameService: GameService,
+    private gameHubService: GameHubService
   ) { }
 
   ngOnInit() {
-    this.playerService.getPlayers(this.gameName)
+    this.gameService.getPlayers(this.gameName)
       .subscribe(players => this.players = players);
   }
 
