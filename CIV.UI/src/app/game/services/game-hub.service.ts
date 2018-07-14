@@ -8,9 +8,11 @@ import { Subject, Observable } from 'rxjs';
 })
 export class GameHubService {
     private connection: HubConnection;
+    private retries = 0;
     gameStarted = new Subject<void>();
     gameEvents = new Subject<any>();
     connected = new Subject<void>();
+    disconnected = new Subject<void>();
 
   constructor(
     authService: AuthService
@@ -26,6 +28,16 @@ export class GameHubService {
       .catch(err => console.error(err.toString()));
     this.connection.on('GameStarted', () => this.gameStarted.next());
     this.connection.on('GameEvent', (e) => this.gameEvents.next(e));
+    this.connection.onclose(() => this.onDisconnected());
+  }
+
+  private onDisconnected() {
+    if (this.retries >= 3) {
+      this.retries = 0;
+      this.disconnected.next();
+    }
+    this.connection.start();
+    this.retries++;
   }
 
   public join(gameName: string) {

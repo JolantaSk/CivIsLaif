@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +37,8 @@ namespace CIV
                 Encoding.UTF8.GetBytes(Configuration["TokenAuthentication:Key"]));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(o => {
+                .AddJwtBearer(o =>
+                {
                     o.IncludeErrorDetails = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -52,28 +54,16 @@ namespace CIV
                         OnMessageReceived = context =>
                         {
 
-                            if (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream")
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/gameHub")))
                             {
-                                var accessToken = context.Request.Query["access_token"];
-                                if (!string.IsNullOrEmpty(accessToken))
-                                {
-                                    context.Token = accessToken;
-                                }
+                                context.Token = accessToken;
                             }
                             return Task.CompletedTask;
                         }
                     };
                 });
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
-                {
-                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-                    policy.RequireClaim(ClaimTypes.NameIdentifier);
-                });
-            });
-            services.AddSignalR();
-            services.AddMvc();
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
@@ -82,7 +72,19 @@ namespace CIV
                         .WithOrigins(Configuration["AllowedOrigins"])
                         .AllowCredentials();
                 }));
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireClaim(ClaimTypes.NameIdentifier);
+                });
+            });
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+            services.AddMvc();
             services.AddSingleton<IAuthorizationHandler, GameCreatorHandler>();
         }
 
