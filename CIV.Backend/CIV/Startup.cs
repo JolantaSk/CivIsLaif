@@ -1,16 +1,14 @@
 ﻿using CIV.Authorization;
+using CIV.DataAccess;
+using CIV.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Net;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CIV
 {
@@ -33,37 +31,15 @@ namespace CIV
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var sharedKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Configuration["TokenAuthentication:Key"]));
+            services.ConfigureAuthentication(Configuration);
+            services.ConfigureDependencies();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(o =>
-                {
-                    o.IncludeErrorDetails = true;
-                    o.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
-                        ValidateAudience = false,
-                        ValidateIssuer = false,
-                        ValidateActor = false,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = sharedKey
-                    };
-                    o.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
+            services.AddDefaultIdentity<Player>()
+                .AddEntityFrameworkStores<CivDbContext>();
 
-                            var accessToken = context.Request.Query["access_token"];
-                            var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/gameHub")))
-                            {
-                                context.Token = accessToken;
-                            }
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
+            services.AddDbContextPool<CivDbContext>(o =>
+                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {

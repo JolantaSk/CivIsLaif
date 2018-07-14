@@ -2,39 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CIV
+namespace CIV.Entities
 {
-    public class Game
+    public class Game: IEntity<Guid>
     {
         private List<Player> _players = new List<Player>();
 
-        public Game(string name, string creator)
+        private Game(string name)
         {
             Id = Guid.NewGuid();
-            Creator = new Player(creator);
-            _players.Add(Creator);
             Name = name;
+        }
+
+        public static Game Create(string name, Player creator)
+        {
+            var game = new Game(name)
+            {
+                Creator = creator
+            };
+            return game;
         }
 
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public Player Creator { get; private set; }
         public IReadOnlyCollection<Player> Players => _players.AsReadOnly();
-        public Player AddPlayer(string username)
+        public void AddPlayer(Player player)
         {
-            if (HasPlayer(username))
+            if (HasPlayer(player.UserName))
             {
                 throw new InvalidOperationException(
-                    $"Player with the same name already exist '{username}'");
+                    $"Player with the same name already exist '{player.UserName}'");
             }
-            var player = new Player(username);
             _players.Add(player);
-            return player;
         }
 
         public bool HasPlayer(string username)
         {
-            return _players.Any(p => p.Username == username);
+            return _players.Any(p => p.UserName == username);
         }
+
+        public IEnumerable<string> PlayerUserNames => _players.Select(p => p.UserName);
     }
 }

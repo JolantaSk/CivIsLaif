@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayerService } from '../../services/player.service';
 import { Player } from '../../../core/models/player';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GameHubService } from '../../services/game-hub.service';
 import { GameService } from '../../services/game.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -17,7 +16,6 @@ export class AwaitingGameComponent implements OnInit {
   isCurrentUserCreator: boolean;
 
   constructor(
-    private playerService: PlayerService,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
@@ -32,7 +30,7 @@ export class AwaitingGameComponent implements OnInit {
 
     this.route.params.subscribe(({name}) => {
       this.gameName = name;
-      this.playerService.getPlayers(name)
+      this.gameService.getPlayers(name)
         .subscribe(players => this.players = players);
 
       this.gameService.getCreator(name)

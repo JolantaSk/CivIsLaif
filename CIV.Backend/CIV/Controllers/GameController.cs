@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CIV.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CIV.Controllers
@@ -8,21 +10,25 @@ namespace CIV.Controllers
     public class GameController: Controller
     {
         private readonly IHubContext<GameHub> _gameHubContext;
+        private readonly IGameService _gameService;
 
-        public GameController(IHubContext<GameHub> gameHubContext)
+        public GameController(
+            IHubContext<GameHub> gameHubContext, 
+            IGameService gameService)
         {
             _gameHubContext = gameHubContext;
+            _gameService = gameService;
         }
 
-        public void Post([FromBody] CreateGameModel model)
+        public async Task Post([FromBody] CreateGameModel model)
         {
-            GameStore.AddGame(model.Name, model.Creator);
+            await _gameService.AddGame(model.Name, model.Creator);
         }
 
         [HttpGet("{name}/creator")]
-        public object GetCreator(string name)
+        public async Task<object> GetCreator(string name)
         {
-            return new { username = GameStore.GetGameCreator(name) };
+            return new { username = await _gameService.GetGameCreator(name) };
         }
 
         [HttpGet("{name}/state")]
@@ -36,11 +42,11 @@ namespace CIV.Controllers
                 timeElapsedInMilliseconds = 12
             };
         }
-    }
 
-    public class CreateGameModel
-    {
-        public string Name { get; set; }
-        public string Creator { get; set; }
+        [HttpGet("{name}/players")]
+        public async Task<IEnumerable<string>> GetPlayers([FromQuery]string name)
+        {
+            return await _gameService.GetPlayerNames(name);
+        }
     }
 }
