@@ -43,6 +43,12 @@ namespace CIV
             }
         }
 
+        public async Task FinishTurn(string gameName)
+        {
+            var username = Context.UserIdentifier;
+            await _gameService.FinishTurn(gameName, username);
+        }
+
         public override Task OnConnectedAsync()
         {
             return base.OnConnectedAsync();

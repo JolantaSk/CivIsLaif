@@ -1,4 +1,5 @@
-﻿using CIV.Entities;
+﻿using CIV.DataAccess.EntityConfigurations;
+using CIV.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,26 +10,19 @@ namespace CIV.DataAccess
         public CivDbContext(DbContextOptions options)
             : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            var gameModel  = modelBuilder.Entity<Game>();
 
-            gameModel
-                .HasMany(g => g.Players)
-                .WithOne();
-            gameModel.Ignore(g => g.PlayerUserNames);
-            gameModel.HasOne(g => g.Creator)
-                .WithMany()
-                .IsRequired(true);
-
-            var naivgation = gameModel.Metadata.FindNavigation(nameof(Game.Players));
-            naivgation.SetField("_players");
-            naivgation.SetPropertyAccessMode(PropertyAccessMode.Field);
-
+            modelBuilder.ApplyConfiguration(new GameEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ActivePhaseEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PhaseEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PlayerTurnOrderEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new TurnOrderEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new TurnEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PlayerTurnEntityTypeConfiguration());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

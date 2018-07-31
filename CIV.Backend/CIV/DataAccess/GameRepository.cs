@@ -1,4 +1,5 @@
 ﻿using CIV.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,17 +15,10 @@ namespace CIV.DataAccess
         public Task<Game> GetByNameAsync(string name)
         {
             return Context.Set<Game>()
+                .Include(g => g.Creator)
                 .Where(g => g.Name == name)
                 .ToAsyncEnumerable()
                 .SingleOrDefault();
-        }
-    }
-
-    public class PlayerRepository : Repository<Player>
-    {
-        public PlayerRepository(CivDbContext context) 
-            : base(context)
-        {
         }
     }
 }

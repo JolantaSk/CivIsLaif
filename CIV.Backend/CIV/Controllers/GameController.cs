@@ -44,7 +44,7 @@ namespace CIV.Controllers
         }
 
         [HttpGet("{name}/players")]
-        public async Task<IEnumerable<string>> GetPlayers([FromQuery]string name)
+        public async Task<IEnumerable<string>> GetPlayers(string name)
         {
             return await _gameService.GetPlayerNames(name);
         }

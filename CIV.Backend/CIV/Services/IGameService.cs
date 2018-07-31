@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CIV.Entities;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,5 +13,6 @@ namespace CIV.Services
         Task<IEnumerable<string>> GetPlayerNames(string name);
         Task<bool> HasPlayer(string gameName, string userName);
         Task<bool> IsGameCreator(string name, string userName);
+        Task FinishTurn(string name, string userName);
     }
 }

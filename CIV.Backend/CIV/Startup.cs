@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,10 +36,12 @@ namespace CIV
             services.ConfigureDependencies();
 
             services.AddDefaultIdentity<Player>()
-                .AddEntityFrameworkStores<CivDbContext>();
+                .AddEntityFrameworkStores<CivDbContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddDbContextPool<CivDbContext>(o =>
-                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<CivDbContext>(o => {
+                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
@@ -65,7 +68,7 @@ namespace CIV
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, CivDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -81,6 +84,9 @@ namespace CIV
                 routes.MapHub<GameHub>("/gameHub");
             });
             app.UseMvc();
+
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.Migrate();
         }
     }
 }

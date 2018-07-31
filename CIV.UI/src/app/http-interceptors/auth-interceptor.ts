@@ -1,6 +1,7 @@
-import { HttpRequest, HttpInterceptor, HttpHandler } from '@angular/common/http';
+import { HttpRequest, HttpInterceptor, HttpHandler, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../core/services/auth.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -22,6 +23,9 @@ export class AuthInterceptor implements HttpInterceptor {
     });
 
     // send cloned request with header to the next handler.
-    return next.handle(authReq);
+    return next.handle(authReq)
+      .pipe(tap(() => {}, (e: HttpErrorResponse) => {
+        this.auth.logout();
+      }));
   }
 }

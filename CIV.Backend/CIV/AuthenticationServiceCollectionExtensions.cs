@@ -15,10 +15,17 @@ namespace CIV
             var sharedKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(configuration["TokenAuthentication:Key"]));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
                 .AddJwtBearer(o =>
                 {
                     o.IncludeErrorDetails = true;
+                    o.SaveToken = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
@@ -26,7 +33,8 @@ namespace CIV
                         ValidateIssuer = false,
                         ValidateActor = false,
                         ValidateLifetime = true,
-                        IssuerSigningKey = sharedKey
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = sharedKey,
                     };
                     o.Events = new JwtBearerEvents
                     {

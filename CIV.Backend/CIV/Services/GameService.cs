@@ -72,5 +72,20 @@ namespace CIV.Services
             var game = await _gameRepository.GetByNameAsync(gameName);
             return game.HasPlayer(userName);
         }
+
+        public async Task FinishTurn(string name, string userName)
+        {
+            var game = await _gameRepository.GetByNameAsync(name);
+            game.FinishPlayerTurn(userName);
+        }
+
+        public async Task Start(string name, Tuple<string, bool>[] phases, string[] playerOrder)
+        {
+            var game = await _gameRepository.GetByNameAsync(name);
+            var players = playerOrder.Select(u => game.Players.First(p => p.UserName == u));
+            var turnOrder = TurnOrder.Create(players.Select(PlayerTurnOrder.Create));
+            var phase = Phase.Create(phases.Select(p => p.Item1));
+            game.Start(turnOrder, phase);
+        }
     }
 }
