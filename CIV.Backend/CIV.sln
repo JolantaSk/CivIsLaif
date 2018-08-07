@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CIV", "CIV\CIV.csproj", "{C
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8DCCECF0-40B2-4E35-A5C4-C6ECDC60D101}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Civ.Tests", "Civ.Tests\Civ.Tests.csproj", "{336CB418-0E9D-479F-82BC-68E64F5D7B12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CIV.Tests", "CIV.Tests\CIV.Tests.csproj", "{336CB418-0E9D-479F-82BC-68E64F5D7B12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
