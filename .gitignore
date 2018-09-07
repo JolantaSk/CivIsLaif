@@ -2,3 +2,5 @@
 /CIV.Backend/.gitignore
 /CIV.UI
 /CIV.UI/.gitignore
+/.vs
+*.csproj.user
